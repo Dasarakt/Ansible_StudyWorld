@@ -1,0 +1,12 @@
+---
+# tasks file for start_vpn
+---
+- name: Start SoftEther VPN Server
+  ansible.builtin.systemd:
+    name: vpnserver
+    state: started
+    
+- name: Enable SoftEther VPN Server
+  ansible.builtin.systemd:
+    name: vpnserver
+    state: enabled

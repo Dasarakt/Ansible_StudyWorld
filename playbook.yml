@@ -1,0 +1,10 @@
+---
+- name: Install and Start and Configure VPN Server
+  hosts: all
+  become: yes
+  vars:
+    vpn_server_api_url: "http://{{ ansible_default_ipv4.address }}:5555/api"
+  roles:
+    - install_vpn
+    - configure_vpn
+    - start_vpn

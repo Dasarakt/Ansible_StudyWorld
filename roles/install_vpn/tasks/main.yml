@@ -1,0 +1,42 @@
+---
+# tasks file for install_vpn
+---
+- name: Download SoftEther VPN Server
+  get_url:
+    url: "https://www.softether-download.com/files/softether/v4.41-9787-rtm-2023.03.14-tree/Linux/SoftEther_VPN_Server/64bit_-_Intel_x64_or_AMD64/softether-vpnserver-v4.41-9787-rtm-2023.03.14-linux-x64-64bit.tar.gz"
+    dest: "/tmp/softether-vpnserver.tar.gz"
+
+- name: Extract SoftEther VPN Server
+  ansible.builtin.unarchive:
+    src: "/tmp/softether-vpnserver.tar.gz"
+    dest: "/opt/"
+    remote_src: yes
+    creates: "/opt/vpnserver/"
+
+- name: Creating an Executable File
+  ansible.builtin.command:
+    cmd: make
+    chdir: /opt/vpnserver
+
+- name: Creating a Startup Script
+  ansible.builtin.command:
+    cmd: make
+    chdir: /opt/vpnserver
+
+- name: Copy Script
+  ansible.builtin.copy:
+    src: "files/vpnserver.sh"
+    dest: "/opt/vpnserver.sh"
+    mode: "0755" 
+
+- name: Copy in init
+  ansible.builtin.copy:
+    src: "files/vpnserver.sh"
+    dest: "/etc/init.d/vpnserver"
+
+- name: Copy service
+  ansible.builtin.copy:
+    src: "files/vpnserver.service"
+    dest: "/etc/systemd/system/vpnserver.service"
+
+    

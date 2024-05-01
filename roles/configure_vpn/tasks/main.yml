@@ -1,0 +1,53 @@
+---
+# tasks file for configure_vpn
+---
+- name: Create VirtualHubs
+  uri:
+    url: "{{ vpn_server_api_url }}/hub/create"
+    method: POST
+    body_format: json
+    body: '{"HubName": "{{ item }}"}'
+    status_code: 200
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+  loop:
+    - PROD
+    - TEST
+    - STAFF
+  register: virtual_hub_creation_result
+
+- name: Create Users in VirtualHubs
+  uri:
+    url: "{{ vpn_server_api_url }}/user/create"
+    method: POST
+    body_format: json
+    body: '{"HubName": "{{ item.hub }}", "AuthType": "Password", "Name": "{{ item.username }}", "AuthPassword": "{{ item.password }}"}'
+    status_code: 200
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+  loop:
+    - { hub: "PROD", username: "pr_user1", password: "password1" }
+    - { hub: "PROD", username: "pr_user2", password: "password2" }
+    - { hub: "TEST", username: "t_user1", password: "password3" }
+    - { hub: "TEST", username: "t_user2", password: "password4" }
+    - { hub: "STAFF", username: "ceo", password: "password5" }
+    - { hub: "STAFF", username: "cto", password: "password6" }
+    - { hub: "STAFF", username: "admin", password: "password7" }
+  register: user_creation_result
+
+- name: Disable Anonymous Enumeration for VirtualHubs
+  uri:
+    url: "{{ vpn_server_api_url }}/hub/configure"
+    method: POST
+    body_format: json
+    body: '{"HubName": "{{ item }}", "NoEnum": true}'
+    status_code: 200
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+  loop:
+    - PROD
+    - TEST
+    - STAFF
