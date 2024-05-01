@@ -16,7 +16,7 @@
 - name: Creating an Executable File
   ansible.builtin.command:
     cmd: make
-    chdir: /opt/vpnserver
+    chdir: "/opt/vpnserver"
 
 - name: Copy Script
   ansible.builtin.copy:
