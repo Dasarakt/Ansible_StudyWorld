@@ -18,11 +18,6 @@
     cmd: make
     chdir: /opt/vpnserver
 
-- name: Creating a Startup Script
-  ansible.builtin.command:
-    cmd: make
-    chdir: /opt/vpnserver
-
 - name: Copy Script
   ansible.builtin.copy:
     src: "files/vpnserver.sh"
@@ -39,4 +34,3 @@
     src: "files/vpnserver.service"
     dest: "/etc/systemd/system/vpnserver.service"
 
-    
